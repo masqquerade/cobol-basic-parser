@@ -6,7 +6,7 @@ import javax.swing.Icon
 
 object CobolFileType : LanguageFileType(CobolLanguage) {
     override fun getName() = "COBOL"
-    override fun getDescription() = "COBOL Language File"
+    override fun getDescription() = "Cobol Language File"
     override fun getDefaultExtension() = "cbl"
     override fun getIcon(): Icon {
         return AllIcons.FileTypes.BinaryData
