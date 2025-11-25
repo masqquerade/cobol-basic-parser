@@ -35,16 +35,9 @@
     ]
 }
 
-cobolFile ::= item_*
+cobolFile ::= item_
 
-/*
-    The grammar defines "nested-cobol-source-program" strictly (first ID DIV, then ENV DIV, then DATA DIV).
-    I am not sure about if IDE plugin should be that strong and forbid arbitrary order of sections.
-    So since it is a minimal subset and parser should correctly work only for specific
-    program, I don't strictly define the order of divisions.
- */
-
-private item_ ::= (identification_division | data_division | procedure_division)
+private item_ ::= identification_division data_division? procedure_division?
 
 // Divisions
 identification_division ::= LINE_NUMBER 'IDENTIFICATION' 'DIVISION' '.' program_id_src
@@ -52,7 +45,7 @@ procedure_division ::= LINE_NUMBER 'PROCEDURE' 'DIVISION' '.' paragraph*
 data_division ::= LINE_NUMBER 'DATA' 'DIVISION' '.' working_storage_section
 
 // Program ID
-program_id_src ::= LINE_NUMBER PROGRAM-ID '.' ID '.'
+program_id_src ::= LINE_NUMBER PROGRAM_ID '.' ID '.'
 
 // Working storage section
 // I do not support data-item-description-entry since it is a minimal subset of Cobol

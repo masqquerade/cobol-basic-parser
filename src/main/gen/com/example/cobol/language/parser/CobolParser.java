@@ -36,15 +36,9 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // item_*
+  // item_
   static boolean cobolFile(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "cobolFile")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!item_(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "cobolFile", c)) break;
-    }
-    return true;
+    return item_(b, l + 1);
   }
 
   /* ********************************************************** */
@@ -124,15 +118,31 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // identification_division | data_division | procedure_division
+  // identification_division data_division? procedure_division?
   static boolean item_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "item_")) return false;
     if (!nextTokenIs(b, LINE_NUMBER)) return false;
     boolean r;
+    Marker m = enter_section_(b);
     r = identification_division(b, l + 1);
-    if (!r) r = data_division(b, l + 1);
-    if (!r) r = procedure_division(b, l + 1);
+    r = r && item__1(b, l + 1);
+    r = r && item__2(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
+  }
+
+  // data_division?
+  private static boolean item__1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "item__1")) return false;
+    data_division(b, l + 1);
+    return true;
+  }
+
+  // procedure_division?
+  private static boolean item__2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "item__2")) return false;
+    procedure_division(b, l + 1);
+    return true;
   }
 
   /* ********************************************************** */
@@ -197,7 +207,7 @@ public class CobolParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LINE_NUMBER PROGRAM-ID '.' ID '.'
+  // LINE_NUMBER PROGRAM_ID '.' ID '.'
   public static boolean program_id_src(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "program_id_src")) return false;
     if (!nextTokenIs(b, LINE_NUMBER)) return false;
