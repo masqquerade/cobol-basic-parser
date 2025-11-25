@@ -1,0 +1,76 @@
+{
+    parserClass="com.example.cobol.language.parser.CobolParser"
+
+    extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+    psiClassPrefix="Cobol"
+    psiImplClassSuffix="Impl"
+    psiPackage="com.example.cobol.language.psi"
+    psiImplPackage="com.example.cobol.language.psi.impl"
+
+    elementTypeHolderClass="com.example.cobol.language.psi.CobolTypes"
+    elementTypeClass="com.example.cobol.language.psi.CobolElementType"
+    tokenTypeClass="com.example.cobol.language.psi.CobolTokenType"
+
+    tokens = [
+        DOT="."
+        EQ="="
+        PROGRAM_ID="PROGRAM-ID"
+        IDENTIFICATION="IDENTIFICATION"
+        DIVISION="DIVISION"
+        DATA="DATA"
+        WORKING_STORAGE="WORKING-STORAGE"
+        SECTION="SECTION"
+        PIC="PIC"
+        VALUE="VALUE"
+        PROCEDURE="PROCEDURE"
+        PERFORM="PERFORM"
+        VARYING="VARYING"
+        FROM="FROM"
+        BY="BY"
+        UNTIL="UNTIL"
+        STOP="STOP"
+        RUN="RUN"
+        DISPLAY="DISPLAY"
+    ]
+}
+
+cobolFile ::= item_*
+
+/*
+    The grammar defines "nested-cobol-source-program" strictly (first ID DIV, then ENV DIV, then DATA DIV).
+    I am not sure about if IDE plugin should be that strong and forbid arbitrary order of sections.
+    So since it is a minimal subset and parser should correctly work only for specific
+    program, I don't strictly define the order of divisions.
+ */
+
+private item_ ::= (identification_division | data_division | procedure_division)
+
+// Divisions
+identification_division ::= LINE_NUMBER 'IDENTIFICATION' 'DIVISION' '.' program_id_src
+procedure_division ::= LINE_NUMBER 'PROCEDURE' 'DIVISION' '.' paragraph*
+data_division ::= LINE_NUMBER 'DATA' 'DIVISION' '.' working_storage_section
+
+// Program ID
+program_id_src ::= LINE_NUMBER PROGRAM-ID '.' ID '.'
+
+// Working storage section
+// I do not support data-item-description-entry since it is a minimal subset of Cobol
+working_storage_section ::= LINE_NUMBER 'WORKING-STORAGE' 'SECTION' '.' record_description_entry*
+
+// Record description entry
+record_description_entry ::= LINE_NUMBER NUMBER ID 'PIC' PICTURE_STRING 'VALUE' NUMBER '.'
+
+// Paragraph
+paragraph ::= LINE_NUMBER ID '.' sentence*
+
+// Sentence
+sentence ::= (perform_varying_phrase | stop_stmt | display_stmt)
+
+// Statements
+perform_varying_phrase ::= LINE_NUMBER 'PERFORM' ID 'VARYING' ID 'FROM' NUMBER 'BY' NUMBER 'UNTIL' condition
+stop_stmt ::= LINE_NUMBER 'STOP' 'RUN' '.'
+display_stmt ::= LINE_NUMBER 'DISPLAY' (STRING | ID)+ '.'
+
+// Condition
+condition ::= ID '=' NUMBER

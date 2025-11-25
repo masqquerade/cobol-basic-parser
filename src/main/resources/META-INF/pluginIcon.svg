@@ -1,0 +1,14 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="40" height="40" rx="8" fill="url(#cobol_gradient)"/>
+
+    <path d="M8 12L14 18L8 24" stroke="#FFFFFF" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <text x="17" y="26" fill="#FFFFFF" font-family="JetBrains Mono, monospace" font-weight="bold" font-size="13" letter-spacing="-0.5">CBL</text>
+
+    <rect x="17" y="29" width="18" height="2" rx="1" fill="#4CAF50"/>
+
+    <defs>
+        <linearGradient id="cobol_gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#1E3953"/> <stop offset="1" stop-color="#3D7199"/> </linearGradient>
+    </defs>
+</svg>
