@@ -1,6 +1,3 @@
-# IntelliJ IDEA plugin for minimal subset of Cobol
-This is my solution for the **Multi-language static analysis plugin** internship test task. This plugin can parse minimal subset of Cobol for specific program.
-
 # Overview
 The structure of the problem follows the [IntelliJ custom language tutorial ](https://plugins.jetbrains.com/docs/intellij/custom-language-support-tutorial.html). It is build on minimized version of [Cobol grammar](https://www.cs.vu.nl/~x/grammars/vs-cobol-ii/index.html). No additional libraries/frameworks were used. All `.cbl` files are being parsed.
 
